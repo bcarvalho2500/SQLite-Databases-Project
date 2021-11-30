@@ -700,7 +700,7 @@ public class AccidentWindow extends javax.swing.JFrame {
             }else if(!SA_DateFrom.getText().isEmpty() && !SA_TotalDamageFrom.getText().isEmpty()){
                 
             }else if(!SA_DateFrom.getText().isEmpty()){
-                query = "SELECT * FROM accidents WHERE accident_date BETWEEN '" + SA_DateFrom.getText() + "' AND '" + SA_DateTo.getText() + "'";
+                query = "SELECT * FROM accidents WHERE accident_date BETWEEN '" + SA_DateFrom.getText() + "' AND '" + SA_DateTo.getText() + "'"; // COmplete
             }else if(!SA_AvgDamageFrom.getText().isEmpty()){
                 
             }else if(!SA_TotalDamageFrom.getText().isEmpty()){
