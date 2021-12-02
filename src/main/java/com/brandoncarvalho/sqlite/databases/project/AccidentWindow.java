@@ -7,6 +7,7 @@ package com.brandoncarvalho.sqlite.databases.project;
 
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.HashMap;
 
 /**
  *
@@ -683,6 +684,7 @@ public class AccidentWindow extends javax.swing.JFrame {
     private void SearchFilteredAccidentsBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFilteredAccidentsBTNActionPerformed
         // TODO add your handling code here:
         PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
         ResultSet rs;
         String query =  "SELECT * FROM accidents";
         
@@ -692,19 +694,53 @@ public class AccidentWindow extends javax.swing.JFrame {
 
         try{
             if(!SA_DateFrom.getText().isEmpty() && !SA_AvgDamageFrom.getText().isEmpty() && !SA_TotalDamageFrom.getText().isEmpty()){
-                
+                query = "SELECT a.aid,a.accident_date, a.city, a.state "
+                        + "FROM accidents a, involvements i "
+                        + "WHERE a.aid == i.aid "
+                        + "GROUP BY a.aid "
+                        + "HAVING (avg(i.damages) >= " + SA_AvgDamageFrom.getText() + ") AND (avg(i.damages) <= " + SA_AvgDamageTo.getText() +") "
+                        + "AND a.accident_date BETWEEN '" + SA_DateFrom.getText() + "' AND '" + SA_DateTo.getText() + "'"
+                        + "AND (total(i.damages) >= " + SA_TotalDamageFrom.getText() + ") AND (total(i.damages) <= " + SA_TotalDamageTo.getText() +")";
             }else if(!SA_DateFrom.getText().isEmpty() && !SA_AvgDamageFrom.getText().isEmpty()){
-                
+                query = "SELECT a.aid,a.accident_date, a.city, a.state "
+                        + "FROM accidents a, involvements i "
+                        + "WHERE a.aid == i.aid "
+                        + "GROUP BY a.aid "
+                        + "HAVING (avg(i.damages) >= " + SA_AvgDamageFrom.getText() + ") AND (avg(i.damages) <= " + SA_AvgDamageTo.getText() +") "
+                        + "AND a.accident_date BETWEEN '" + SA_DateFrom.getText() + "' AND '" + SA_DateTo.getText() + "'";
             }else if(!SA_AvgDamageFrom.getText().isEmpty() && !SA_TotalDamageFrom.getText().isEmpty()){
-                
+                query = "SELECT a.aid,a.accident_date, a.city, a.state "
+                        + "FROM accidents a, involvements i "
+                        + "WHERE a.aid == i.aid "
+                        + "GROUP BY a.aid "
+                        + "HAVING (total(i.damages) >= " + SA_TotalDamageFrom.getText() + ") AND (total(i.damages) <= " + SA_TotalDamageTo.getText() +") "
+                        + "AND (avg(i.damages) >= " + SA_AvgDamageFrom.getText() + ") AND (avg(i.damages) <= " + SA_AvgDamageTo.getText() +")";
             }else if(!SA_DateFrom.getText().isEmpty() && !SA_TotalDamageFrom.getText().isEmpty()){
+                query = "SELECT a.aid,a.accident_date, a.city, a.state "
+                        + "FROM accidents a, involvements i "
+                        + "WHERE a.aid == i.aid "
+                        + "GROUP BY a.aid "
+                        + "HAVING (total(i.damages) >= " + SA_TotalDamageFrom.getText() + ") AND (total(i.damages) <= " + SA_TotalDamageTo.getText() +") "
+                        + "AND a.accident_date BETWEEN '" + SA_DateFrom.getText() + "' AND '" + SA_DateTo.getText() + "'";
                 
             }else if(!SA_DateFrom.getText().isEmpty()){
-                query = "SELECT * FROM accidents WHERE accident_date BETWEEN '" + SA_DateFrom.getText() + "' AND '" + SA_DateTo.getText() + "'"; // COmplete
+                query = "SELECT a.aid,a.accident_date, a.city, a.state "
+                        + "FROM accidents a, involvements i "
+                        + "WHERE a.aid == i.aid "
+                        + "GROUP BY a.aid "
+                        + "HAVING a.accident_date BETWEEN '" + SA_DateFrom.getText() + "' AND '" + SA_DateTo.getText() + "'";
             }else if(!SA_AvgDamageFrom.getText().isEmpty()){
-                
+                query = "SELECT a.aid,a.accident_date, a.city, a.state "
+                        + "FROM accidents a, involvements i "
+                        + "WHERE a.aid == i.aid "
+                        + "GROUP BY a.aid "
+                        + "HAVING (avg(i.damages) >= " + SA_AvgDamageFrom.getText() + ") AND (avg(i.damages) <= " + SA_AvgDamageTo.getText() +")";
             }else if(!SA_TotalDamageFrom.getText().isEmpty()){
-                query = "SELECT * FROM accidents WHERE aid IS IN (SELECT aid FROM involvments WHERE damages >= " + SA_TotalDamageFrom.getText() + " AND damages <= " + SA_TotalDamageTo.getText();
+                query = "SELECT a.aid,a.accident_date, a.city, a.state "
+                        + "FROM accidents a, involvements i "
+                        + "WHERE a.aid == i.aid "
+                        + "GROUP BY a.aid "
+                        + "HAVING (total(i.damages) >= " + SA_TotalDamageFrom.getText() + ") AND (total(i.damages) <= " + SA_TotalDamageTo.getText() +")";
             }
             
             System.out.println(query);
