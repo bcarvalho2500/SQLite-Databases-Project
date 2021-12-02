@@ -270,17 +270,9 @@ public class AccidentWindow extends javax.swing.JFrame {
 
             },
             new String [] {
-                "VIN", "Damages", "Driver_SSN"
+                "aid", "VIN", "Damages", "Driver_SSN"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        ));
         jScrollPane2.setViewportView(SA_VehicleInformationTable);
 
         jLabel3.setText("Accident Information");
@@ -561,8 +553,8 @@ public class AccidentWindow extends javax.swing.JFrame {
         ResultSet rs = null;
         try{
             String searchAccident;
-            if(accidentID == null){
-                searchAccident = "SELECT *" + "FROM accidents";
+            if(accidentID.getText().isEmpty()){
+                searchAccident = "SELECT * " + "FROM accidents";
             }else{
                 searchAccident = "SELECT * " + "FROM accidents " + "WHERE aid = " + accidentID.getText();
             }
@@ -585,18 +577,24 @@ public class AccidentWindow extends javax.swing.JFrame {
         }
         
         try{
-            String involvedVehicles = "SELECT *" + "FROM involvements " + "WHERE aid = " + accidentID.getText();
+            String involvedVehicles;
+            if(accidentID.getText().isEmpty()){
+                involvedVehicles = "SELECT * " + "FROM involvements";
+            }else{
+                involvedVehicles = "SELECT * " + "FROM involvements " + "WHERE aid = " + accidentID.getText();
+            }
             stmt = con.prepareStatement(involvedVehicles);
             stmt.clearParameters();
             rs = stmt.executeQuery();
             
-            Object[] dataRow = new Object[3];
+            Object[] dataRow = new Object[4];
             DefaultTableModel involvementModel = (DefaultTableModel) SA_VehicleInformationTable.getModel();
             involvementModel.setRowCount(0);
             while(rs.next()){
-                dataRow[0] = rs.getString("vin");
-                dataRow[1] = rs.getString("damages");
-                dataRow[2] = rs.getString("driver_ssn");
+                dataRow[0] = rs.getInt("aid");
+                dataRow[1] = rs.getString("vin");
+                dataRow[2] = rs.getString("damages");
+                dataRow[3] = rs.getString("driver_ssn");
                 involvementModel.addRow(dataRow);
             }
         }catch(SQLException e){
@@ -684,7 +682,6 @@ public class AccidentWindow extends javax.swing.JFrame {
     private void SearchFilteredAccidentsBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFilteredAccidentsBTNActionPerformed
         // TODO add your handling code here:
         PreparedStatement stmt = null;
-        PreparedStatement stmt2 = null;
         ResultSet rs;
         String query =  "SELECT * FROM accidents";
         

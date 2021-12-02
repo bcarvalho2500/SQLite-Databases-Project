@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.brandoncarvalho</groupId>
     <artifactId>SQLite-Databases-Project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.1</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -13,8 +13,41 @@
         </dependency>
     </dependencies>
     <properties>
+        <mainClass>com.brandoncarvalho.sqlite.databases.project.AccidentWindow</mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
+    <build>
+<plugins>
+ <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+            <execution>
+                <phase>install</phase>
+                <goals>
+                    <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+    <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+            <archive>
+                <manifest>
+                    <addClasspath>true</addClasspath>
+                    <classpathPrefix>lib/</classpathPrefix>
+                    <mainClass>com.brandoncarvalho.sqlite.databases.project.AccidentWindow</mainClass>
+                </manifest>
+            </archive>
+        </configuration>
+    </plugin>
+
+</plugins>
+</build>
+
 </project>
